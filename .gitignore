@@ -1,0 +1,38 @@
+# Node.js 项目典型 .gitignore 配置
+package-lock.json
+# Node 模块
+node_modules/
+
+# 日志文件
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 操作系统特定文件
+.DS_Store
+Thumbs.db
+
+# 环境变量文件
+.env
+
+# 临时文件
+*.swp
+*.tmp
+
+# Docker 文件
+docker-compose.override.yml
+
+# 忽略构建文件
+dist/
+build/
+
+# 忽略IDE相关文件
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# 生产环境中不需要的文件
+coverage/

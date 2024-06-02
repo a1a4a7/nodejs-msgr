@@ -1,0 +1,19 @@
+{
+  "name": "session-serv",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "session-serv.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "express": "^4.19.2",
+    "ioredis": "^5.4.1",
+    "redis": "^4.6.14",
+    "redlock": "^5.0.0-beta.2"
+  }
+}

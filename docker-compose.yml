@@ -1,0 +1,83 @@
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    depends_on:
+      - zookeeper
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+
+  redis-node-1:
+    image: redis:6.2
+    command: redis-server --port 6379
+    ports:
+      - "6379:6379"
+
+  redis-node-2:
+    image: redis:6.2
+    command: redis-server --port 6380
+    ports:
+      - "6380:6380"
+
+  redis-node-3:
+    image: redis:6.2
+    command: redis-server --port 6381
+    ports:
+      - "6381:6381"
+
+  msg-serv:
+    build: ./services/msg-serv
+    ports:
+      - "3000:3000"
+    environment:
+      KAFKA_BROKER: kafka:9092
+    depends_on:
+      - kafka
+
+  db-serv:
+    build: ./services/db-serv
+    environment:
+      KAFKA_BROKER: kafka:9092
+      MONGO_URI: mongodb://mongo:27017/chat
+    depends_on:
+      - kafka
+      - mongo
+
+  stream-serv:
+    build: ./services/stream-serv
+    ports:
+      - "8080:8080"
+    environment:
+      KAFKA_BROKER: kafka:9092
+    depends_on:
+      - kafka
+
+  session-serv:
+    build: ./services/session-serv
+    ports:
+      - "3001:3001"
+    environment:
+      REDIS_HOST_1: redis-node-1
+      REDIS_PORT_1: 6379
+      REDIS_HOST_2: redis-node-2
+      REDIS_PORT_2: 6380
+      REDIS_HOST_3: redis-node-3
+      REDIS_PORT_3: 6381
+    depends_on:
+      - redis-node-1
+      - redis-node-2
+      - redis-node-3
